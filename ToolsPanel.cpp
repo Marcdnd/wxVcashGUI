@@ -34,7 +34,7 @@ ToolsPanel::ToolsPanel(VcashApp &vcashApp, ToolsFrame &parent)
     notebook->AddPage(new StatisticsPage(vcashApp, *notebook), wxT("Statistics"));
     notebook->AddPage(new AddressesPage(vcashApp, *notebook, parent), wxT("Addresses"));
     notebook->AddPage(new ConsolePage(vcashApp, *notebook), wxT("Console"));
-    notebook->AddPage(new MiningPage(*notebook, vcashApp), wxT("Mining"));
+    notebook->AddPage(new MiningPage(vcashApp, *notebook), wxT("Mining"));
 
     vcashApp.view.toolsPanel = this;
 

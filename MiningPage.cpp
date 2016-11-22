@@ -25,7 +25,7 @@
 
 using namespace wxGUI;
 
-MiningPage::MiningPage(wxWindow &parent, VcashApp &vcashApp)
+MiningPage::MiningPage(VcashApp &vcashApp, wxWindow &parent)
         : isMining(false)
         , wxPanel(&parent) {
 

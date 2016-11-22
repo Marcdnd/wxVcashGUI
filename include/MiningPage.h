@@ -28,7 +28,7 @@ namespace wxGUI {
 
     class MiningPage : public wxPanel {
     public:
-        MiningPage(wxWindow &parent, VcashApp &vcashApp);
+        MiningPage(VcashApp &vcashApp, wxWindow &parent);
 
         void setMining(bool b);
 
