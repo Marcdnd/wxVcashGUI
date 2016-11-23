@@ -318,9 +318,6 @@ void Controller::OnStatus(const std::map<std::string, std::string> &pairs) {
 
                 std::time_t txTime = (std::time_t) atoll(time.c_str());
 
-                char timeFormatted[256];
-                std::strftime(timeFormatted, sizeof(timeFormatted), "%m/%d/%y %H:%M:%S", std::localtime(&txTime));
-
                 view.addTransaction(hash, txTime, txMsg, formated(net));
                 view.setColour(hash, isConfirmed ? Green : Yellow);
 
