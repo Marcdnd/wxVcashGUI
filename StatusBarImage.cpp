@@ -14,11 +14,11 @@
 
 using namespace wxGUI;
 
-StatusBarImage::StatusBarImage(wxStatusBar &parent, wxBitmap &bitmap)
+StatusBarImage::StatusBarImage(wxWindow &parent, wxBitmap &bitmap)
         : wxStaticBitmap(&parent, wxID_ANY, bitmap) {
 }
 
-StatusBarImage::StatusBarImage(wxStatusBar &parent, wxBitmap &bitmap,
+StatusBarImage::StatusBarImage(wxWindow &parent, wxBitmap &bitmap,
                                std::function<void(wxMouseEvent &)> onClickCode)
         : StatusBarImage(parent, bitmap) {
     Bind(wxEVT_LEFT_UP, onClickCode);

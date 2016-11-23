@@ -17,7 +17,6 @@
 
 #ifndef WX_PRECOMP
 #include <wx/bitmap.h>
-#include <wx/statusbr.h>
 #endif
 
 #include "StatusBarImage.h"
@@ -32,7 +31,7 @@ namespace wxGUI {
 
     class StatusBarWallet : public StatusBarImage {
     public:
-        StatusBarWallet(VcashApp &vcashApp, wxStatusBar &parent);
+        StatusBarWallet(VcashApp &vcashApp, wxWindow &parent);
 
         WalletStatus getWalletStatus();
 

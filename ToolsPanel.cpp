@@ -26,13 +26,13 @@
 
 using namespace wxGUI;
 
-ToolsPanel::ToolsPanel(VcashApp &vcashApp, ToolsFrame &parent)
+ToolsPanel::ToolsPanel(VcashApp &vcashApp, wxWindow &parent)
         : wxPanel(&parent, wxID_ANY) {
 
     notebook = new wxNotebook(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, 0, wxT("ToolsPanel"));
 
     notebook->AddPage(new StatisticsPage(vcashApp, *notebook), wxT("Statistics"));
-    notebook->AddPage(new AddressesPage(vcashApp, *notebook, parent), wxT("Addresses"));
+    notebook->AddPage(new AddressesPage(vcashApp, *notebook), wxT("Addresses"));
     notebook->AddPage(new ConsolePage(vcashApp, *notebook), wxT("Console"));
     notebook->AddPage(new MiningPage(vcashApp, *notebook), wxT("Mining"));
 

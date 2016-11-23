@@ -19,7 +19,6 @@
 #include <wx/icon.h>
 #include <wx/event.h>
 #include <wx/statbmp.h>
-#include <wx/statusbr.h>
 #endif
 
 #include <functional>
@@ -28,9 +27,9 @@ namespace wxGUI {
 
     class StatusBarImage : public wxStaticBitmap {
     public:
-		StatusBarImage(wxStatusBar &parent, wxBitmap &bitmap);
+		StatusBarImage(wxWindow &parent, wxBitmap &bitmap);
 
-        StatusBarImage(wxStatusBar &parent, wxBitmap &bitmap, std::function<void(wxMouseEvent &)> onClickCode);
+        StatusBarImage(wxWindow &parent, wxBitmap &bitmap, std::function<void(wxMouseEvent &)> onClickCode);
 
         void bindOnLeftClick(std::function<void(wxMouseEvent &)> onClickCode);
     };

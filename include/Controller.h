@@ -35,10 +35,10 @@ namespace wxGUI {
 
     class Controller {
     private:
-        View &vcashView;
+        View &view;
         wxStack stack;
     public:
-        Controller(View &vcashView);
+        Controller(View &view);
 
         // Called when application is initialized
         bool onInit();

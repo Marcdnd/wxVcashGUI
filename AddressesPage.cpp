@@ -46,7 +46,7 @@ namespace wxGUI {
 
 using namespace wxGUI;
 
-AddressesPage::AddressesPage(VcashApp &vcashApp, wxWindow &parent, ToolsFrame &toolsFrame)
+AddressesPage::AddressesPage(VcashApp &vcashApp, wxWindow &parent)
         : wxPanel(&parent) {
 
     vcashApp.view.addressesPage = this;
@@ -61,7 +61,7 @@ AddressesPage::AddressesPage(VcashApp &vcashApp, wxWindow &parent, ToolsFrame &t
 
     SetSizerAndFit(pageSizer);
 
-    addresses->Bind(wxEVT_LIST_ITEM_RIGHT_CLICK, [this, &toolsFrame, &vcashApp](wxListEvent &event) {
+    addresses->Bind(wxEVT_LIST_ITEM_RIGHT_CLICK, [this, &vcashApp](wxListEvent &event) {
         long index = event.GetIndex();
 
         enum PopupMenu {

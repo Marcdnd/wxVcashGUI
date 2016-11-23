@@ -24,12 +24,11 @@
 
 namespace wxGUI {
 
-    class ToolsFrame;
     class VcashApp;
 
     class AddressesPage : public wxPanel {
     public:
-        AddressesPage(VcashApp &vcashApp, wxWindow &parent, ToolsFrame &toolsFrame);
+        AddressesPage(VcashApp &vcashApp, wxWindow &parent);
 
         void addAddress(const std::string &account, const std::string &address);
 

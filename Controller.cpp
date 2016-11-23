@@ -91,22 +91,22 @@ void wxStack::on_alert(const std::map<std::string, std::string> &pairs)  {
 
 
 
-Controller::Controller(View &vcashView)
-        : vcashView(vcashView)
-        , stack(vcashView) { }
+Controller::Controller(View &view)
+        : view(view)
+        , stack(view) { }
 
 bool Controller::onInit() {
     std::map<std::string,std::string> args;
     stack.start(args);
 
-    vcashView.setMining(false);
+    view.setMining(false);
 
     std::string zero = "0.000000";
 
-    vcashView.setBalance(zero);
-    vcashView.setUnconfirmed(zero);
-    vcashView.setStake(zero);
-    vcashView.setImmature(zero);
+    view.setBalance(zero);
+    view.setUnconfirmed(zero);
+    view.setStake(zero);
+    view.setImmature(zero);
 
     return true;
 }
@@ -179,7 +179,7 @@ void Controller::onMiningPressed(bool isMining) {
 }
 
 void Controller::onConsoleCommandEntered(const std::string &command) {
-    vcashView.appendToConsole(command);
+    view.appendToConsole(command);
     stack.rpc_send(command);
 }
 
@@ -190,7 +190,7 @@ void Controller::onZerotimeLockTransaction(const std::string &txid) {
 
 void Controller::OnError(const std::map<std::string, std::string> &pairs) {
     std::string value = Utils::find("value", pairs);
-    vcashView.MessageBox(value, "Fatal error", wxOK | wxICON_ERROR);
+    view.MessageBox(value, "Fatal error", wxOK | wxICON_ERROR);
     stack.stop();
 }
 
@@ -208,8 +208,6 @@ void Controller::OnStatus(const std::map<std::string, std::string> &pairs) {
         }
         std::cout << "********************************************************" << std::endl << std::endl;
 #endif
-        View view = vcashView;
-
         auto formated = [](std::string str) {
             return Utils::formatted(Utils::fromJohnoshis(str), 6);
         };

@@ -25,7 +25,7 @@
 
 using namespace wxGUI;
 
-StatusBarWallet::StatusBarWallet(VcashApp &vcashApp, wxStatusBar &parent)
+StatusBarWallet::StatusBarWallet(VcashApp &vcashApp, wxWindow &parent)
         : walletStatus(Unknown)
         , bitmapLocked(Resources::locked)
         , bitmapUnlocked(Resources::unlocked)

@@ -23,13 +23,11 @@
 
 namespace wxGUI {
 
-    class ToolsPanel;
-
     class VcashApp;
 
     class ToolsPanel : public wxPanel {
     public:
-        ToolsPanel(VcashApp &vcashApp, ToolsFrame &parent);
+        ToolsPanel(VcashApp &vcashApp, wxWindow &parent);
         void showConsolePage();
     private:
         wxNotebook *notebook;

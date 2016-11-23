@@ -28,8 +28,8 @@ namespace wxGUI {
         HistoryPage *historyPage = (HistoryPage *) sortData;
         std::string txid1 = *(std::string *) item1;
         std::string txid2 = *(std::string *) item2;
-        std::time_t t1 = historyPage->transactions.find(txid1)->second.date;
-        std::time_t t2 = historyPage->transactions.find(txid2)->second.date;
+        std::time_t t1 = historyPage->transactions.find(txid1)->second.time;
+        std::time_t t2 = historyPage->transactions.find(txid2)->second.time;
         if (t1 < t2)
             return 1;
         else if (t1 > t2)
@@ -81,7 +81,7 @@ HistoryPage::HistoryPage(VcashApp &vcashApp, wxWindow &parent)
         long index = event.GetIndex();
 
         enum PopupMenu {
-            BlockExplorer, Copy, Lock, Info
+            BlockExplorer, Copy, Info, Lock
         };
         wxMenu popupMenu;
         popupMenu.Append(BlockExplorer, wxT("&Block explorer"));
@@ -136,10 +136,10 @@ HistoryPage::HistoryPage(VcashApp &vcashApp, wxWindow &parent)
     });
 }
 
-void HistoryPage::addTransaction(const std::string &txid, const std::time_t &date, const std::string &status,
+void HistoryPage::addTransaction(const std::string &txid, const std::time_t &time, const std::string &status,
                                  const std::string &amount) {
     long newItemIndex = transactions.size();
-    TxData txData = {date};
+    TxData txData = { time };
     auto pair = transactions.insert(std::make_pair(txid, txData));
 
     long index;
@@ -161,7 +161,7 @@ void HistoryPage::addTransaction(const std::string &txid, const std::time_t &dat
 
     if (index >= 0) {
         char formattedTime[256];
-        std::strftime(formattedTime, sizeof(formattedTime), "%m/%d/%y %H:%M:%S", std::localtime(&date));
+        std::strftime(formattedTime, sizeof(formattedTime), "%m/%d/%y %H:%M:%S", std::localtime(&time));
 
         listCtrl->SetItem(index, Date, wxString(formattedTime), Yellow);
         listCtrl->SetItem(index, Status, wxString(status));

@@ -36,7 +36,7 @@ namespace wxGUI {
     public:
         HistoryPage(VcashApp &vcashApp, wxWindow &parent);
 
-        void addTransaction(const std::string &txid, const std::time_t &date, const std::string &status,
+        void addTransaction(const std::string &txid, const std::time_t &time, const std::string &status,
                             const std::string &amount);
 
         void setColour(const std::string &txid, BulletColor color);
@@ -51,10 +51,10 @@ namespace wxGUI {
         wxListCtrl *listCtrl;
 
         struct TxData {
-            std::time_t date;  // date of the transaction
+            std::time_t time;  // time of the transaction
         };
 
-        std::map<std::string, TxData> transactions; // from txid (hash) to data
+        std::map<std::string, TxData> transactions; // from txid (hash) to TxData
 
         // needs access to transactions map
         friend int wxCALLBACK cmpDatesFunction(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData);
