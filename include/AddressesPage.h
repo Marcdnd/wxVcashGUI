@@ -44,7 +44,7 @@ namespace wxGUI {
 
         SortData sortData;
 
-        friend int wxCALLBACK AddressesCmpFunct(long item1, long item2, wxIntPtr sortDt);
+        friend int wxCALLBACK AddressesCmpFunct(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortDt);
     };
 }
 
