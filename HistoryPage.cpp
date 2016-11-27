@@ -67,11 +67,12 @@ HistoryPage::HistoryPage(VcashApp &vcashApp, wxWindow &parent)
 
     listCtrl->SetImageList(statusImages, wxIMAGE_LIST_SMALL);
 
-    listCtrl->InsertColumn(Date, wxT("Date"), wxLIST_FORMAT_LEFT, 170);
+    listCtrl->InsertColumn(Icon, wxT(""), wxLIST_FORMAT_CENTER, 24);
+    listCtrl->InsertColumn(Date, wxT("Date"), wxLIST_FORMAT_LEFT, 133);
     listCtrl->InsertColumn(Status, wxT("Status"), wxLIST_FORMAT_LEFT, 120);
     listCtrl->InsertColumn(Amount, wxT("Amount"), wxLIST_FORMAT_LEFT, 125);
 
-    wxSizer *pageSizer = new wxBoxSizer(wxVERTICAL);
+    wxSizer *pageSizer = new wxBoxSizer(wxHORIZONTAL);
     pageSizer->Add(listCtrl, 1, wxALL | wxEXPAND, 5);
 
     SetSizerAndFit(pageSizer);
@@ -163,7 +164,8 @@ void HistoryPage::addTransaction(const std::string &txid, const std::time_t &tim
         char formattedTime[256];
         std::strftime(formattedTime, sizeof(formattedTime), "%m/%d/%y %H:%M:%S", std::localtime(&time));
 
-        listCtrl->SetItem(index, Date, wxString(formattedTime), Yellow);
+        listCtrl->SetItem(index, Icon, wxString(""), Yellow);
+        listCtrl->SetItem(index, Date, wxString(formattedTime));
         listCtrl->SetItem(index, Status, wxString(status));
         listCtrl->SetItem(index, Amount, wxString(amount));
         listCtrl->SetItemState(index, 0, 0);
@@ -181,7 +183,7 @@ void HistoryPage::setColour(const std::string &txid, BulletColor color) {
         if (index >= 0) {
             bool isOut = listCtrl->GetItemText(index, Amount)[0] == '-';
             int numImages = listCtrl->GetImageList(wxIMAGE_LIST_SMALL)->GetImageCount();
-            listCtrl->SetItemColumnImage(index, Date, isOut ? color : numImages / 2 + color);
+            listCtrl->SetItem(index, Icon, wxString(""), isOut ? color : numImages / 2 + color);
         }
     }
 }

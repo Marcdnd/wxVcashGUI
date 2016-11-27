@@ -45,7 +45,7 @@ namespace wxGUI {
 
     private:
         enum Column {
-            Date, Status, Amount
+            Icon, Date, Status, Amount
         };;
 
         wxListCtrl *listCtrl;
