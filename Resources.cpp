@@ -22,7 +22,7 @@
 #include "resources/tools22.cpp"
 #include "resources/unlocked22.cpp"
 
-#ifdef __WXGTK__
+#if defined ( __WXGTK__) || defined (__WXMSW__)
 #include "resources/vcash.cpp"
 #endif
 

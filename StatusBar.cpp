@@ -48,19 +48,30 @@ StatusBar::StatusBar(VcashApp &vcashApp, wxWindow &parent, wxFrame &toolsFrame)
 
     vcashApp.view.walletLock = new StatusBarWallet(vcashApp, *this);
 
-    SetMinHeight(wxMax(toolsImg->GetBestSize().GetHeight(),
-                       vcashApp.view.walletLock->GetBestSize().GetHeight()));
+    double iconSz = wxMax(toolsImg->GetBestSize().GetHeight(),
+                          vcashApp.view.walletLock->GetBestSize().GetHeight());
+    SetMinHeight(iconSz);
+    SetSize(-1, iconSz+2);
+    parent.SendSizeEvent();
+
     Bind(wxEVT_SIZE, [this, &vcashApp, toolsImg](wxSizeEvent &event) {
 
         View &view = vcashApp.view;
 
+#if defined(__WXGTK__)
+#define ICON_OFFSET 2
+#elif defined(__WXMSW__)
+#define ICON_OFFSET 0
+#elif defined(__WXOSX__)
+#define ICON_OFFSET 2.5
+#endif
         struct Local {
             static void move(StatusBar &statusBar, Pane pane, wxStaticBitmap &bitmap) {
                 wxRect rect;
                 statusBar.GetFieldRect(pane, rect);
                 wxSize size = bitmap.GetSize();
                 bitmap.Move(rect.x + (rect.width - size.x) / 2
-                        , rect.y + (rect.height - size.y) / 2 - 2);
+                        , rect.y + (rect.height - size.y) / 2 - ICON_OFFSET);
             }
         };
 
