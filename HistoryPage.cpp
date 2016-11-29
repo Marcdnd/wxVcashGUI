@@ -24,18 +24,52 @@
 #include "VcashApp.h"
 
 namespace wxGUI {
-    int cmpDatesFunction(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData) {
-        HistoryPage *historyPage = (HistoryPage *) sortData;
-        std::string txid1 = *(std::string *) item1;
-        std::string txid2 = *(std::string *) item2;
-        std::time_t t1 = historyPage->transactions.find(txid1)->second.time;
-        std::time_t t2 = historyPage->transactions.find(txid2)->second.time;
-        if (t1 < t2)
-            return 1;
-        else if (t1 > t2)
-            return -1;
-        else
-            return 0;
+    int cmpHistory(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortDt) {
+        HistoryPage::SortData *sortData = (HistoryPage::SortData *) sortDt;
+        HistoryPage *historyPage = sortData->historyPage;
+        wxListCtrl *listCtrl = historyPage->listCtrl;
+        auto order = sortData->order;
+
+        for(int i=0; i<order.size(); i++) {
+            auto col = order[i].first;
+            int result;
+            switch(col) {
+                case HistoryPage::Date: {
+                    std::string txid1 = *(std::string *) item1;
+                    std::string txid2 = *(std::string *) item2;
+                    std::time_t t1 = historyPage->transactions.find(txid1)->second.time;
+                    std::time_t t2 = historyPage->transactions.find(txid2)->second.time;
+                    result = (t1 < t2) ? -1 : (t1 > t2);
+                    break;
+                }
+
+                case HistoryPage::Status: {
+                    long index1 = listCtrl->FindItem(0, item1);
+                    auto str1 = listCtrl->GetItemText(index1, col);
+
+                    long index2 = listCtrl->FindItem(0, item2);
+                    auto str2 = listCtrl->GetItemText(index2, col);
+
+                    result = str1.Cmp(str2);
+                    break;
+                }
+
+                case HistoryPage::Amount: {
+                    long index1 = listCtrl->FindItem(0, item1);
+                    auto str1 = listCtrl->GetItemText(index1, col);
+                    long index2 = listCtrl->FindItem(0, item2);
+                    auto str2 = listCtrl->GetItemText(index2, col);
+                    double amount1, amount2;
+                    if (str1.ToDouble(&amount1) && str2.ToDouble(&amount2)) {
+                        result = (amount1 < amount2) ? -1 : (amount1 > amount2);
+                    } else
+                        result = 0;
+                    break;
+                }
+            }
+            if((result != 0) || (i==order.size()-1))
+                return order[i].second ? result : -result;
+        }
     }
 }
 
@@ -77,6 +111,28 @@ HistoryPage::HistoryPage(VcashApp &vcashApp, wxWindow &parent)
 
     SetSizerAndFit(pageSizer);
 
+    // Sort is according to first element in order vector. true means descending order.
+    // In case of tie, we use next next element in vector
+    sortData = { this, { { Date, true }, { Amount, true }, { Status, true } }};
+
+    listCtrl->Bind(wxEVT_LIST_COL_CLICK, [this](wxListEvent &ev) {
+        Column column = static_cast<Column >(ev.GetColumn());
+
+        int i;
+        for(i=0; (i<sortData.order.size()) && (sortData.order[i].first != column); i++)
+            ;
+
+        if(i<sortData.order.size()) {
+            std::pair<Column, bool> p = sortData.order[i];
+            p.second = !p.second; // invert order
+
+            // move clicked column to first position
+            for(int j=i; j>0; j--)
+                sortData.order[j] = sortData.order[j-1];
+            sortData.order[0] = p;
+            listCtrl->SortItems(cmpHistory, (wxIntPtr) &sortData);
+        }
+    });
 
     listCtrl->Bind(wxEVT_LIST_ITEM_RIGHT_CLICK, [this, &vcashApp](wxListEvent &event) {
         long index = event.GetIndex();
@@ -172,7 +228,7 @@ void HistoryPage::addTransaction(const std::string &txid, const std::time_t &tim
         // listCtrl->EnsureVisible(index);
     }
 
-    listCtrl->SortItems(cmpDatesFunction, (wxIntPtr) this);
+    listCtrl->SortItems(cmpHistory, (wxIntPtr) &sortData);
 }
 
 void HistoryPage::setColour(const std::string &txid, BulletColor color) {

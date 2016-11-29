@@ -23,6 +23,7 @@
 
 #include <ctime>
 #include <map>
+#include <vector>
 
 namespace wxGUI {
 
@@ -56,8 +57,15 @@ namespace wxGUI {
 
         std::map<std::string, TxData> transactions; // from txid (hash) to TxData
 
-        // needs access to transactions map
-        friend int wxCALLBACK cmpDatesFunction(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortData);
+        struct SortData {
+            HistoryPage *historyPage;
+            std::vector<std::pair<Column,bool>> order;
+        };
+
+        SortData sortData;
+
+        // needs access to transactions map and sortData
+        friend int wxCALLBACK cmpHistory(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortDt);
     };
 }
 

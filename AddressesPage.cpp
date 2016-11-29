@@ -23,24 +23,42 @@
 #include "VcashApp.h"
 
 namespace wxGUI {
-    int wxCALLBACK AddressesCmpFunct(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortDt) {
+    int cmpAddresses(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortDt) {
         AddressesPage::SortData *sortData = (AddressesPage::SortData *) sortDt;
-        wxListCtrl *listCtrl = sortData->listCtrl;
-        int col = static_cast<int>(sortData->column);
+        AddressesPage *addressesPage = sortData->addressesPage;
+        wxListCtrl *listCtrl = addressesPage->addresses;
+        auto order = sortData->order;
 
-        long index1 = listCtrl->FindItem(0, item1);
-        auto str1 = listCtrl->GetItemText(index1, col);
+        for(int i=0; i<order.size(); i++) {
+            auto col = order[i].first;
+            int result;
 
-        long index2 = listCtrl->FindItem(0, item2);
-        auto str2 = listCtrl->GetItemText(index2, col);
+            switch(col) {
+                case AddressesPage::Account: {
+                    long index1 = listCtrl->FindItem(0, item1);
+                    auto str1 = listCtrl->GetItemText(index1, col);
 
-        int result = str1.Cmp(str2);
-        if (result == 0) {
-            col = (col + 1) % listCtrl->GetColumnCount();
-            str1 = listCtrl->GetItemText(index1, col);
-            str2 = listCtrl->GetItemText(index2, col);
+                    long index2 = listCtrl->FindItem(0, item2);
+                    auto str2 = listCtrl->GetItemText(index2, col);
+
+                    result = str1.Cmp(str2);
+                    break;
+                }
+
+                case AddressesPage::Address: {
+                    long index1 = listCtrl->FindItem(0, item1);
+                    auto str1 = listCtrl->GetItemText(index1, col);
+
+                    long index2 = listCtrl->FindItem(0, item2);
+                    auto str2 = listCtrl->GetItemText(index2, col);
+
+                    result = str1.Cmp(str2);
+                    break;
+                }
+            }
+            if((result != 0) || (i==order.size()-1))
+                return order[i].second ? result : -result;
         }
-        return sortData->ascending ? str1.Cmp(str2) : str2.Cmp(str1);
     }
 }
 
@@ -104,13 +122,27 @@ AddressesPage::AddressesPage(VcashApp &vcashApp, wxWindow &parent)
         event.Skip();
     });
 
-    sortData = {addresses, Account, true};
+    // Sort is according to first element in order vector. true means descending order.
+    // In case of tie, we use next next element in vector
+    sortData = { this, { { Account, true }, { Address, true } }};
 
     addresses->Bind(wxEVT_LIST_COL_CLICK, [this](wxListEvent &ev) {
-        sortData.column = static_cast<Column >(ev.GetColumn());
-        sortData.ascending = !sortData.ascending;
-        addresses->SortItems(AddressesCmpFunct, (wxIntPtr) &sortData);
+        Column column = static_cast<Column >(ev.GetColumn());
 
+        int i;
+        for(i=0; (i<sortData.order.size()) && (sortData.order[i].first != column); i++)
+            ;
+
+        if(i<sortData.order.size()) {
+            std::pair<Column, bool> p = sortData.order[i];
+            p.second = !p.second; // invert order
+
+            // move clicked column to first position
+            for(int j=i; j>0; j--)
+                sortData.order[j] = sortData.order[j-1];
+            sortData.order[0] = p;
+            addresses->SortItems(cmpAddresses, (wxIntPtr) &sortData);
+        }
     });
 }
 
@@ -123,5 +155,5 @@ void AddressesPage::addAddress(const std::string &account, const std::string &ad
     addresses->SetItemPtrData(index, (wxUIntPtr) id);
     addresses->SetItem(index, Account, wxString(account));
     addresses->SetItem(index, Address, wxString(address));
-    addresses->SortItems(AddressesCmpFunct, (wxIntPtr) &sortData);
+    addresses->SortItems(cmpAddresses, (wxIntPtr) &sortData);
 }

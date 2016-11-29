@@ -22,6 +22,8 @@
 #include <wx/window.h>
 #endif
 
+#include <vector>
+
 namespace wxGUI {
 
     class VcashApp;
@@ -37,14 +39,14 @@ namespace wxGUI {
         enum Column { Account, Address };
 
         struct SortData {
-            wxListCtrl *listCtrl;
-            Column column;
-            bool ascending;
+            AddressesPage *addressesPage;
+            std::vector<std::pair<Column,bool>> order;
         };
 
         SortData sortData;
 
-        friend int wxCALLBACK AddressesCmpFunct(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortDt);
+        // needs access to transactions map and sortData
+        friend int wxCALLBACK cmpAddresses(wxIntPtr item1, wxIntPtr item2, wxIntPtr sortDt);
     };
 }
 
