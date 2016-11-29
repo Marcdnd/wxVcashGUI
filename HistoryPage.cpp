@@ -80,15 +80,35 @@ HistoryPage::HistoryPage(VcashApp &vcashApp, wxWindow &parent)
 
     vcashApp.view.historyPage = this;
 
-    listCtrl = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize,
+    listCtrl = new wxListCtrl(this, wxID_ANY, wxDefaultPosition, wxSize(430, wxDefaultSize.GetHeight()),
                               wxLC_REPORT | wxLC_SINGLE_SEL | wxBORDER_NONE);
 
-    wxBitmap redR = Resources::redR;
-    wxImage redL = redR.ConvertToImage().Rotate180();
-    wxBitmap greenR = Resources::greenR;
-    wxImage greenL = greenR.ConvertToImage().Rotate180();;
-    wxBitmap yellowR = Resources::yellowR;
-    wxImage yellowL = yellowR.ConvertToImage().Rotate180();;
+    auto addMargin = [](wxBitmap bm, bool rotate) {
+        const int leftMargin = 5;
+        wxImage img(bm.GetWidth()+leftMargin, bm.GetHeight());
+
+        img.InitAlpha();
+        unsigned char *alpha = img.GetAlpha();
+        memset(alpha, wxIMAGE_ALPHA_TRANSPARENT, img.GetWidth()*img.GetHeight());
+
+        wxImage imgBm = bm.ConvertToImage();
+        if(rotate)
+            imgBm = imgBm.Rotate180();
+        img.Paste(imgBm, leftMargin, 0);
+        return img;
+    };
+
+    wxBitmap red = Resources::redR;
+    wxImage redL = addMargin(red, false);
+    wxImage redR = addMargin(red, true);
+
+    wxBitmap green = Resources::greenR;
+    wxImage greenL = addMargin(green, false);
+    wxImage greenR = addMargin(green, true);
+
+    wxBitmap yellow = Resources::yellowR;
+    wxImage yellowL = addMargin(yellow, false);
+    wxImage yellowR = addMargin(yellow, true);
 
     int dim = wxMax(redL.GetHeight(), redL.GetWidth());
     wxImageList *statusImages = new wxImageList(dim, dim, true);
@@ -101,10 +121,10 @@ HistoryPage::HistoryPage(VcashApp &vcashApp, wxWindow &parent)
 
     listCtrl->SetImageList(statusImages, wxIMAGE_LIST_SMALL);
 
-    listCtrl->InsertColumn(Icon, wxT(""), wxLIST_FORMAT_CENTER, 24);
-    listCtrl->InsertColumn(Date, wxT("Date"), wxLIST_FORMAT_LEFT, 133);
-    listCtrl->InsertColumn(Status, wxT("Status"), wxLIST_FORMAT_LEFT, 120);
-    listCtrl->InsertColumn(Amount, wxT("Amount"), wxLIST_FORMAT_LEFT, 125);
+    listCtrl->InsertColumn(Icon, wxT(""), wxLIST_FORMAT_CENTER, 30);
+    listCtrl->InsertColumn(Date, wxT("Date"), wxLIST_FORMAT_LEFT, 135);
+    listCtrl->InsertColumn(Status, wxT("Status"), wxLIST_FORMAT_LEFT, 125);
+    listCtrl->InsertColumn(Amount, wxT("Amount"), wxLIST_FORMAT_LEFT, 130);
 
     wxSizer *pageSizer = new wxBoxSizer(wxHORIZONTAL);
     pageSizer->Add(listCtrl, 1, wxALL | wxEXPAND, 5);
@@ -116,7 +136,7 @@ HistoryPage::HistoryPage(VcashApp &vcashApp, wxWindow &parent)
     sortData = { this, { { Date, true }, { Amount, true }, { Status, true } }};
 
     listCtrl->Bind(wxEVT_LIST_COL_CLICK, [this](wxListEvent &ev) {
-        Column column = static_cast<Column >(ev.GetColumn());
+        Column column = static_cast<Column>(ev.GetColumn());
 
         int i;
         for(i=0; (i<sortData.order.size()) && (sortData.order[i].first != column); i++)

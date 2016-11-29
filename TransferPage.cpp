@@ -52,7 +52,7 @@ TransferPage::TransferPage(VcashApp &vcashApp, wxWindow &parent) : wxPanel(&pare
     send->SetToolTip(wxT("Send coins now"));
 
     payCtrl->SetHint(wxT("0.0"));
-    toCtrl->SetHint(wxT("address"));
+    toCtrl->SetHint(wxT("destination address"));
 
     int cols = 2, vgap = 5, hgap = 10;
     wxFlexGridSizer *fgs = new wxFlexGridSizer(cols, vgap, hgap);
