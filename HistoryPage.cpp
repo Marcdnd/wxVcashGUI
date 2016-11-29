@@ -137,58 +137,60 @@ HistoryPage::HistoryPage(VcashApp &vcashApp, wxWindow &parent)
     listCtrl->Bind(wxEVT_LIST_ITEM_RIGHT_CLICK, [this, &vcashApp](wxListEvent &event) {
         long index = event.GetIndex();
 
-        enum PopupMenu {
-            BlockExplorer, Copy, Info, Lock
-        };
-        wxMenu popupMenu;
-        popupMenu.Append(BlockExplorer, wxT("&Block explorer"));
-        popupMenu.Append(Copy, wxT("&Copy"));
-        popupMenu.Append(Info, wxT("&Information"));
-        popupMenu.Append(Lock, wxT("&Lock"));
-
-        auto select = GetPopupMenuSelectionFromUser(popupMenu);
-        listCtrl->SetItemState(index, 0,
-                               wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED);
-
-        switch (select) {
-            case BlockExplorer: {
-                std::string txid = *((std::string *) listCtrl->GetItemData(index));
-                std::string url = "https://www.blockexperts.com/xvc/tx/" + txid;
-                wxLaunchDefaultBrowser(url);
-                break;
-            }
-
-            case Copy: {
-                std::string txid = *((std::string *) listCtrl->GetItemData(index));
-
-                auto clipboard = wxTheClipboard;
-
-                if (clipboard->Open()) {
-                    clipboard->Clear();
-                    clipboard->SetData(new wxTextDataObject(txid));
-                    clipboard->Flush();
-
-                    clipboard->Close();
-                }
-                break;
-            }
-
-            case Info: {
-                std::string txid = *((std::string *) listCtrl->GetItemData(index));
-                std::string cmd = "gettransaction " + txid;
-                vcashApp.controller.onConsoleCommandEntered(cmd);
-                break;
-            }
-
-            case Lock: {
-                std::string txid = *((std::string *) listCtrl->GetItemData(index));
-                vcashApp.controller.onZerotimeLockTransaction(txid);
-                break;
-            }
-
-            default: {
-                break;
+        if (index >= 0) {
+            enum PopupMenu {
+                BlockExplorer, Copy, Info, Lock
             };
+            wxMenu popupMenu;
+            popupMenu.Append(BlockExplorer, wxT("&Block explorer"));
+            popupMenu.Append(Copy, wxT("&Copy"));
+            popupMenu.Append(Info, wxT("&Information"));
+            popupMenu.Append(Lock, wxT("&Lock"));
+
+            auto select = GetPopupMenuSelectionFromUser(popupMenu);
+            listCtrl->SetItemState(index, 0,
+                                   wxLIST_STATE_FOCUSED | wxLIST_STATE_SELECTED);
+
+            switch (select) {
+                case BlockExplorer: {
+                    std::string txid = *((std::string *) listCtrl->GetItemData(index));
+                    std::string url = "https://www.blockexperts.com/xvc/tx/" + txid;
+                    wxLaunchDefaultBrowser(url);
+                    break;
+                }
+
+                case Copy: {
+                    std::string txid = *((std::string *) listCtrl->GetItemData(index));
+
+                    auto clipboard = wxTheClipboard;
+
+                    if (clipboard->Open()) {
+                        clipboard->Clear();
+                        clipboard->SetData(new wxTextDataObject(txid));
+                        clipboard->Flush();
+
+                        clipboard->Close();
+                    }
+                    break;
+                }
+
+                case Info: {
+                    std::string txid = *((std::string *) listCtrl->GetItemData(index));
+                    std::string cmd = "gettransaction " + txid;
+                    vcashApp.controller.onConsoleCommandEntered(cmd);
+                    break;
+                }
+
+                case Lock: {
+                    std::string txid = *((std::string *) listCtrl->GetItemData(index));
+                    vcashApp.controller.onZerotimeLockTransaction(txid);
+                    break;
+                }
+
+                default: {
+                    break;
+                };
+            }
         }
     });
 }

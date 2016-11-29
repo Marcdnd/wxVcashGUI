@@ -27,3 +27,10 @@
 *.exe
 *.out
 *.app
+
+# GNU/Linux
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
+vcash
