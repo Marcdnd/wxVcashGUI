@@ -99,16 +99,16 @@ HistoryPage::HistoryPage(VcashApp &vcashApp, wxWindow &parent)
     };
 
     wxBitmap red = Resources::redR;
-    wxImage redL = addMargin(red, false);
-    wxImage redR = addMargin(red, true);
+    wxImage redL = addMargin(red, true);
+    wxImage redR = addMargin(red, false);
 
     wxBitmap green = Resources::greenR;
-    wxImage greenL = addMargin(green, false);
-    wxImage greenR = addMargin(green, true);
+    wxImage greenL = addMargin(green, true);
+    wxImage greenR = addMargin(green, false);
 
     wxBitmap yellow = Resources::yellowR;
-    wxImage yellowL = addMargin(yellow, false);
-    wxImage yellowR = addMargin(yellow, true);
+    wxImage yellowL = addMargin(yellow, true);
+    wxImage yellowR = addMargin(yellow, false);
 
     int dim = wxMax(redL.GetHeight(), redL.GetWidth());
     wxImageList *statusImages = new wxImageList(dim, dim, true);
