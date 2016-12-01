@@ -122,7 +122,7 @@ AddressesPage::AddressesPage(VcashApp &vcashApp, wxWindow &parent)
         event.Skip();
     });
 
-    // Sort is according to first element in order vector. true means descending order.
+    // Sort is according to first element in order vector. true means ascending order.
     // In case of tie, we use next next element in vector
     sortData = { this, { { Account, true }, { Address, true } }};
 

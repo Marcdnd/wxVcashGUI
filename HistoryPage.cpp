@@ -131,9 +131,9 @@ HistoryPage::HistoryPage(VcashApp &vcashApp, wxWindow &parent)
 
     SetSizerAndFit(pageSizer);
 
-    // Sort is according to first element in order vector. true means descending order.
+    // Sort is according to first element in order vector. true means ascending order.
     // In case of tie, we use next next element in vector
-    sortData = { this, { { Date, true }, { Amount, true }, { Status, true } }};
+    sortData = { this, { { Date, false }, { Amount, true }, { Status, true } }};
 
     listCtrl->Bind(wxEVT_LIST_COL_CLICK, [this](wxListEvent &ev) {
         Column column = static_cast<Column>(ev.GetColumn());
