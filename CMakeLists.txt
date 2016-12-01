@@ -28,10 +28,17 @@ TARGET_LINK_LIBRARIES(vcash
         ${vcashLib}/libdb_cxx.a
         ${vcashLib}/libdatabase.a
 
+        wx_gtk3u_richtext-3.0
+        wx_gtk3u_adv-3.0
+        wx_baseu_xml-3.0
+        wx_gtk3u_html-3.0
+
+
         wx_gtk3u_core-3.0 wx_baseu-3.0 wx_gtk3u_adv-3.0 wxtiff-3.0 wxjpeg-3.0
         pthread
         gtk-3 gdk-3 gdk_pixbuf-2.0
         X11
         SM
         cairo pango-1.0 pangocairo-1.0
-        gobject-2.0 glib-2.0 png z dl m)
+        gobject-2.0 glib-2.0 png z dl m
+        expat)

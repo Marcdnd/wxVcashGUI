@@ -179,7 +179,7 @@ void Controller::onMiningPressed(bool isMining) {
 }
 
 void Controller::onConsoleCommandEntered(const std::string &command) {
-    view.appendToConsole(command);
+    view.appendToConsole(command, true);
     stack.rpc_send(command);
 }
 
@@ -265,7 +265,7 @@ void Controller::OnStatus(const std::map<std::string, std::string> &pairs) {
             }
         } else if(type == "rpc") {
             std::string result = Utils::find("value", pairs);
-            view.appendToConsole(result);
+            view.appendToConsole(result+"\n");
             goto end;
         } else if(type == "wallet") {
             std::string value = Utils::find("value", pairs);

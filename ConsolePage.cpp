@@ -27,8 +27,14 @@ ConsolePage::ConsolePage(VcashApp &vcashApp, wxWindow &parent) : wxPanel(&parent
     int cols = 1, vgap = 10, hgap = 15;
     wxFlexGridSizer *fgs = new wxFlexGridSizer(cols, vgap, hgap);
 
-    output = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize,
-                            wxTE_MULTILINE | wxTE_RICH2 );
+    output = new wxRichTextCtrl(
+            this, wxID_ANY, wxEmptyString, wxDefaultPosition,
+            wxDefaultSize, wxVSCROLL | wxBORDER_NONE | wxWANTS_CHARS);
+
+
+    wxFont fixedFont = wxFont(11, wxFIXED, wxNORMAL, wxNORMAL);
+    output->SetFont(fixedFont);
+
     command = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 
     output->SetToolTip(wxT("Results of invoked RPC commands"));
@@ -55,9 +61,21 @@ ConsolePage::ConsolePage(VcashApp &vcashApp, wxWindow &parent) : wxPanel(&parent
     });
 }
 
-void ConsolePage::appendToConsole(const std::string &text) {
+void ConsolePage::appendToConsole(const std::string &text, bool bold) {
     //output->SetEditable(true);
-    output->AppendText(wxString(text+"\n"));
+    if(bold) {
+        output->BeginBold();
+        output->BeginFontSize(output->GetFont().GetPointSize()+2);
+        output->BeginStandardBullet("X",0,30);
+    }
+    output->WriteText(wxString(text));
+    output->Newline();
+    if(bold) {
+        output->EndFont();
+        output->EndBold();
+        output->EndStandardBullet();
+    }
+
     output->ShowPosition(output->GetLastPosition());
     //output->SetValue(text);
     //output->ScrollPages(100); //   ScrollIntoView(output->GetCaretPosition(), WXK_PAGEDOWN);

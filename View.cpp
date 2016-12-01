@@ -87,9 +87,9 @@ void View::addAddress(const std::string &account, const std::string &address) {
 // Console
 
 // apends a new line of text to console output
-void View::appendToConsole(const std::string &text) {
+void View::appendToConsole(const std::string &text, bool bold) {
     toolsPanel->showConsolePage();
-    consolePage->appendToConsole(text);
+    consolePage->appendToConsole(text, bold);
 }
 
 // History

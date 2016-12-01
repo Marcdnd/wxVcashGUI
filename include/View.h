@@ -84,7 +84,7 @@ namespace wxGUI {
         bool getMining();
 
         // Console
-        void appendToConsole(const std::string &text);
+        void appendToConsole(const std::string &text, bool bold = false);
 
         // Address book
         void addAddress(const std::string &account, const std::string &address);

@@ -17,6 +17,7 @@
 
 #ifndef WX_PRECOMP
 #include <wx/panel.h>
+#include <wx/richtext/richtextctrl.h>
 #include <wx/textctrl.h>
 #include <wx/window.h>
 #endif
@@ -29,10 +30,11 @@ namespace wxGUI {
     public:
         ConsolePage(VcashApp &vcashApp, wxWindow &parent);
 
-        void appendToConsole(const std::string &text);
+        void appendToConsole(const std::string &text, bool bold = false);
 
     private:
-        wxTextCtrl *output, *command;
+        wxRichTextCtrl *output;
+        wxTextCtrl *command;
     };
 }
 
