@@ -265,7 +265,7 @@ void Controller::OnStatus(const std::map<std::string, std::string> &pairs) {
             }
         } else if(type == "rpc") {
             std::string result = Utils::find("value", pairs);
-            view.appendToConsole(result+"\n");
+            view.appendToConsole(result);
             goto end;
         } else if(type == "wallet") {
             std::string value = Utils::find("value", pairs);

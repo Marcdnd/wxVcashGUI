@@ -10,10 +10,11 @@
  *
  ******************************************************************************/
  
-#include "wx/wxprec.h"
+#include <wx/wxprec.h>
 
 #ifndef WX_PRECOMP
-#include "wx/sizer.h"
+#include <wx/button.h>
+#include <wx/sizer.h>
 #endif
 
 #include "ConsolePage.h"
@@ -37,11 +38,18 @@ ConsolePage::ConsolePage(VcashApp &vcashApp, wxWindow &parent) : wxPanel(&parent
 
     command = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 
+    wxButton *clear = new wxButton(this, wxID_ANY, wxT("Clear"));
+
     output->SetToolTip(wxT("Results of invoked RPC commands"));
     command->SetToolTip(wxT("RPC command to invoke"));
+    clear->SetToolTip(wxT("Clear all previous output"));
+
+    wxBoxSizer *row = new wxBoxSizer(wxHORIZONTAL);
+    row->Add(command, 1, wxALL | wxEXPAND);
+    row->Add(clear);
 
     fgs->Add(output, 1, wxEXPAND);
-    fgs->Add(command, 1, wxEXPAND);
+    fgs->Add(row, 1, wxALL | wxEXPAND);
 
     fgs->AddGrowableRow(0, 1);
     fgs->AddGrowableCol(0, 1);
@@ -56,28 +64,60 @@ ConsolePage::ConsolePage(VcashApp &vcashApp, wxWindow &parent) : wxPanel(&parent
         vcashApp.controller.onConsoleCommandEntered(cmd);
     });
 
+
+    command->Bind(wxEVT_KEY_DOWN, [this, &vcashApp](wxKeyEvent &ev) {
+        switch (ev.GetKeyCode()) {
+            case WXK_UP:
+                output->MoveUp();
+                output->ScrollIntoView(output->GetCaretPosition(),WXK_UP);
+                break;
+            case WXK_DOWN:
+                output->MoveDown();
+                output->ScrollIntoView(output->GetCaretPosition(),WXK_UP);
+                break;
+            case WXK_HOME:
+                output->MoveHome();
+                output->ScrollIntoView(output->GetCaretPosition(),WXK_HOME);
+                break;
+            case WXK_END:
+                output->MoveEnd();
+                output->ScrollIntoView(output->GetCaretPosition(),WXK_END);
+                break;
+            case WXK_PAGEUP:
+                output->PageUp();
+                output->ScrollIntoView(output->GetCaretPosition(),WXK_PAGEUP);
+                break;
+            case WXK_PAGEDOWN:
+                output->PageDown();
+                output->ScrollIntoView(output->GetCaretPosition(),WXK_PAGEUP);
+                break;
+            default:
+                ev.Skip();
+        }
+    });
+
     output->Bind(wxEVT_SET_FOCUS, [this](wxFocusEvent &) {
         command->SetFocus();
+    });
+
+    clear->Bind(wxEVT_BUTTON, [this](wxCommandEvent &) {
+        output->Clear();
     });
 }
 
 void ConsolePage::appendToConsole(const std::string &text, bool bold) {
-    //output->SetEditable(true);
+    output->MoveEnd();
+    output->ScrollIntoView(output->GetCaretPosition(),WXK_END);
     if(bold) {
         output->BeginBold();
         output->BeginFontSize(output->GetFont().GetPointSize()+2);
-        output->BeginStandardBullet("X",0,30);
     }
     output->WriteText(wxString(text));
-    output->Newline();
     if(bold) {
         output->EndFont();
         output->EndBold();
-        output->EndStandardBullet();
     }
+    output->Newline();
 
     output->ShowPosition(output->GetLastPosition());
-    //output->SetValue(text);
-    //output->ScrollPages(100); //   ScrollIntoView(output->GetCaretPosition(), WXK_PAGEDOWN);
-    //output-ScrollLines(-1);
 }
