@@ -29,7 +29,7 @@ StatusBarWallet::StatusBarWallet(VcashApp &vcashApp, wxWindow &parent)
         : walletStatus(Unknown)
         , bitmapLocked(Resources::locked)
         , bitmapUnlocked(Resources::unlocked)
-        , bitmapUnknown (Resources::connecting)
+        , bitmapUnknown (Resources::empty)
         , StatusBarImage(parent, *new wxBitmap(), [this, &parent, &vcashApp](wxMouseEvent &ev) {
               switch (walletStatus) {
                   case Locked: {

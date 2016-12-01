@@ -27,7 +27,7 @@ namespace wxGUI {
         static void init();
 
         static wxBitmap redR, greenR, yellowR;
-        static wxBitmap connecting, locked, settings, tools, unlocked;
+        static wxBitmap empty, locked, settings, tools, unlocked;
 
         static wxIcon vcashIcon;
     };

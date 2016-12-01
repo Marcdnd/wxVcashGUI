@@ -64,6 +64,8 @@ StatusBar::StatusBar(VcashApp &vcashApp, wxWindow &parent, wxFrame &toolsFrame)
 #define ICON_OFFSET 0
 #elif defined(__WXOSX__)
 #define ICON_OFFSET 2.5
+#else
+#error "You must define one of: __WXGTK__, __WXMSW__ or __WXOSX__"
 #endif
         struct Local {
             static void move(StatusBar &statusBar, Pane pane, wxStaticBitmap &bitmap) {
