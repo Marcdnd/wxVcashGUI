@@ -36,7 +36,7 @@ public:
     }
 
     static double fromJohnoshis(std::string &amount) {
-        return fromJohnoshis(std::stoul (amount, nullptr));
+        return fromJohnoshis(std::stol (amount, nullptr));
     }
 
     static std::string formatted(double amount, int decimals) {
