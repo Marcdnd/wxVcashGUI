@@ -35,10 +35,10 @@ namespace wxGUI {
 
             switch(col) {
                 case AddressesPage::Account: {
-                    long index1 = listCtrl->FindItem(0, item1);
+                    long index1 = listCtrl->FindItem(-1, item1);
                     auto str1 = listCtrl->GetItemText(index1, col);
 
-                    long index2 = listCtrl->FindItem(0, item2);
+                    long index2 = listCtrl->FindItem(-1, item2);
                     auto str2 = listCtrl->GetItemText(index2, col);
 
                     result = str1.Cmp(str2);
@@ -46,10 +46,10 @@ namespace wxGUI {
                 }
 
                 case AddressesPage::Address: {
-                    long index1 = listCtrl->FindItem(0, item1);
+                    long index1 = listCtrl->FindItem(-1, item1);
                     auto str1 = listCtrl->GetItemText(index1, col);
 
-                    long index2 = listCtrl->FindItem(0, item2);
+                    long index2 = listCtrl->FindItem(-1, item2);
                     auto str2 = listCtrl->GetItemText(index2, col);
 
                     result = str1.Cmp(str2);
