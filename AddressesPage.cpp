@@ -83,10 +83,11 @@ AddressesPage::AddressesPage(VcashApp &vcashApp, wxWindow &parent)
         long index = event.GetIndex();
 
         enum PopupMenu {
-            Copy, New, QR
+            Copy, Explorer, New, QR
         };
         wxMenu popupMenu;
         popupMenu.Append(Copy, wxT("&Copy"));
+        popupMenu.Append(Explorer, wxT("&Block explorer"));
         popupMenu.Append(New, wxT("&New"));
         popupMenu.Append(QR, wxT("&QR Code"));
 
@@ -107,6 +108,12 @@ AddressesPage::AddressesPage(VcashApp &vcashApp, wxWindow &parent)
                 }
                 break;
             }
+            case Explorer: {
+                wxString address = addresses->GetItemText(index, Address);
+                wxString url = "https://www.blockexperts.com/xvc/address/" + address;
+                wxLaunchDefaultBrowser(url);
+                break;
+            }
             case New: {
                 wxString account = addresses->GetItemText(index, Account);
                 vcashApp.controller.onConsoleCommandEntered("getnewaddress " + account.ToStdString());
@@ -115,6 +122,7 @@ AddressesPage::AddressesPage(VcashApp &vcashApp, wxWindow &parent)
             case QR:
                 //toDo: generate QR code
                 break;
+
             default:
                 break;
         }

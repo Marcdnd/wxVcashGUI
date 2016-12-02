@@ -65,7 +65,7 @@ ConsolePage::ConsolePage(VcashApp &vcashApp, wxWindow &parent) : wxPanel(&parent
     });
 
 
-    command->Bind(wxEVT_KEY_DOWN, [this, &vcashApp](wxKeyEvent &ev) {
+    command->Bind(wxEVT_KEY_DOWN, [this](wxKeyEvent &ev) {
         switch (ev.GetKeyCode()) {
             case WXK_UP:
                 output->MoveUp();
