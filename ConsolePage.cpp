@@ -33,7 +33,7 @@ ConsolePage::ConsolePage(VcashApp &vcashApp, wxWindow &parent) : wxPanel(&parent
             wxDefaultSize, wxVSCROLL | wxBORDER_NONE | wxWANTS_CHARS);
 
 
-    wxFont fixedFont = wxFont(11, wxFIXED, wxNORMAL, wxNORMAL);
+    wxFont fixedFont = wxFont(10, wxFONTFAMILY_TELETYPE, wxNORMAL, wxNORMAL);
     output->SetFont(fixedFont);
 
     command = new wxTextCtrl(this, wxID_ANY, wxT(""), wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
