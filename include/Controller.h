@@ -37,6 +37,7 @@ namespace wxGUI {
     private:
         View &view;
         wxStack stack;
+        bool walletLoaded;
     public:
         Controller(View &view);
 
@@ -84,6 +85,18 @@ namespace wxGUI {
         // notification from Vcash stack. This is needed as all GUI operations
         // have to be performed by GUI thread,
         void OnError(const std::map<std::string, std::string> &pairs);
+
+        // Returns the wallet HD keychain seed
+        std::string getHDSeed();
+
+        // True is wallet is encrypted
+        bool isWalletCrypted();
+
+        // True is wallet is locked
+        bool isWalletLocked();
+
+        // True is wallet has been loaded
+        bool isWalletLoaded();
     };
 }
 

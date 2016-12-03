@@ -30,12 +30,13 @@ namespace wxGUI {
     class StatusBar : public wxStatusBar {
     public:
         enum Pane {
-            Tools, Msg, Locked
+            Tools, Msg, Settings, Locked
         };
     private:
-        const std::map<Pane, int> fieldsWidths{{Tools,  40},
-                                               {Msg,    -1},
-                                               {Locked, 40}};
+        const std::map<Pane, int> fieldsWidths{{Tools,    40},
+                                               {Msg,      -1},
+                                               {Settings, 25},
+                                               {Locked,   40}};
     public:
         StatusBar(VcashApp &vcashApp, wxWindow &parent, wxFrame &toolsFrame);
 

@@ -93,7 +93,8 @@ void wxStack::on_alert(const std::map<std::string, std::string> &pairs)  {
 
 Controller::Controller(View &view)
         : view(view)
-        , stack(view) { }
+        , stack(view)
+        , walletLoaded(false) { }
 
 bool Controller::onInit() {
     std::map<std::string,std::string> args;
@@ -188,6 +189,24 @@ void Controller::onZerotimeLockTransaction(const std::string &txid) {
     stack.wallet_zerotime_lock(txid);
 }
 
+std::string Controller::getHDSeed() {
+    std::cout << stack.wallet_hd_keychain_seed() << std::endl;
+    return stack.wallet_hd_keychain_seed();
+}
+
+
+bool Controller::isWalletCrypted() {
+    return stack.wallet_is_crypted();
+}
+
+bool Controller::isWalletLocked() {
+    return stack.wallet_is_locked();
+}
+
+bool Controller::isWalletLoaded() {
+    return walletLoaded;
+}
+
 void Controller::OnError(const std::map<std::string, std::string> &pairs) {
     std::string value = Utils::find("value", pairs);
     view.MessageBox(value, "Fatal error", wxOK | wxICON_ERROR);
@@ -271,6 +290,7 @@ void Controller::OnStatus(const std::map<std::string, std::string> &pairs) {
             std::string value = Utils::find("value", pairs);
             if(value=="Loaded wallet") {
                 // Now that wallet has been loaded, set locked/unlocked status in GUI
+                walletLoaded = true;
                 view.setWalletStatus(stack.wallet_is_crypted() ? Locked : Unencrypted);
                 goto end;
             }

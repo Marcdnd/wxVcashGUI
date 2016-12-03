@@ -16,6 +16,7 @@
 #include <wx/msgdlg.h>
 #endif
 
+#include "Settings.h"
 #include "Resources.h"
 #include "StatusBarImage.h"
 #include "StatusBar.h"
@@ -35,6 +36,7 @@ StatusBar::StatusBar(VcashApp &vcashApp, wxWindow &parent, wxFrame &toolsFrame)
     SetFieldsCount(numFields, ws);
 
     StatusBarImage *toolsImg = new StatusBarImage(*this, Resources::tools);
+    StatusBarImage *settingsImg = new StatusBarImage(*this, Resources::settings);
     toolsImg->bindOnLeftClick([this, &toolsFrame, toolsImg](wxMouseEvent &event) {
         int x = event.GetX();
         int y = event.GetY();
@@ -46,6 +48,10 @@ StatusBar::StatusBar(VcashApp &vcashApp, wxWindow &parent, wxFrame &toolsFrame)
         toolsFrame.SetFocus();
     });
 
+    settingsImg->bindOnLeftClick([this, &vcashApp, &parent](wxMouseEvent &event) {
+        new SettingsMenu(vcashApp, parent);
+    });
+
     vcashApp.view.walletLock = new StatusBarWallet(vcashApp, *this);
 
     double iconSz = wxMax(toolsImg->GetBestSize().GetHeight(),
@@ -54,7 +60,7 @@ StatusBar::StatusBar(VcashApp &vcashApp, wxWindow &parent, wxFrame &toolsFrame)
     SetSize(-1, iconSz+2);
     parent.SendSizeEvent();
 
-    Bind(wxEVT_SIZE, [this, &vcashApp, toolsImg](wxSizeEvent &event) {
+    Bind(wxEVT_SIZE, [this, &vcashApp, toolsImg, settingsImg](wxSizeEvent &event) {
 
         View &view = vcashApp.view;
 
@@ -78,6 +84,7 @@ StatusBar::StatusBar(VcashApp &vcashApp, wxWindow &parent, wxFrame &toolsFrame)
         };
 
         Local::move(*this, Tools, *toolsImg);
+        Local::move(*this, Settings, *settingsImg);
         Local::move(*this, Locked, *view.walletLock);
 
         event.Skip();
